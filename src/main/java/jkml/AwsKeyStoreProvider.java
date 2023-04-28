@@ -21,15 +21,15 @@ public class AwsKeyStoreProvider {
 	}
 
 	public Path getKeyStore() throws IOException {
-		var bytes = secretsProvider.getBase64DecodedSecret(properties.getSecretName().getKeyStore());
-		var path = Files.createTempFile("", "");
+		var bytes = secretsProvider.getSecretBinary(properties.getSecretName().getKeyStore());
+		var path = Files.createTempFile(null, null);
 		log.info("Writing key store to temporary file: {}", path);
 		Files.write(path, bytes);
 		return path;
 	}
 
 	public String getKeyStorePassword() {
-		return secretsProvider.getSecret(properties.getSecretName().getKeyStorePassword());
+		return secretsProvider.getSecretString(properties.getSecretName().getKeyStorePassword());
 	}
 
 }

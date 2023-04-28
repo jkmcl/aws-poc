@@ -1,7 +1,5 @@
 package jkml;
 
-import java.util.Base64;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,17 +16,18 @@ public class AwsSecretsProvider {
 		this.secretsManagerClient = secretsManagerClient;
 	}
 
-	public String getSecret(String name) {
-		log.info("Retrieving secret: {}", name);
+	public String getSecretString(String name) {
+		log.info("Retrieving secret string by name: {}", name);
 		var request = GetSecretValueRequest.builder().secretId(name).build();
 		var response = secretsManagerClient.getSecretValue(request);
 		return response.secretString();
 	}
 
-	public byte[] getBase64DecodedSecret(String name) {
-		var base64 = getSecret(name);
-		log.info("Decoding secret: {}", name);
-		return Base64.getMimeDecoder().decode(base64);
+	public byte[] getSecretBinary(String name) {
+		log.info("Retrieving secret binary by name: {}", name);
+		var request = GetSecretValueRequest.builder().secretId(name).build();
+		var response = secretsManagerClient.getSecretValue(request);
+		return response.secretBinary().asByteArray();
 	}
 
 }
